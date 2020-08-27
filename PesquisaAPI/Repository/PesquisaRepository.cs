@@ -1,9 +1,13 @@
 ﻿
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PesquisaAPI.DB;
 using PesquisaAPI.Models;
 using PesquisaAPI.Repository.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PesquisaAPI.Repository
 {
@@ -14,39 +18,48 @@ namespace PesquisaAPI.Repository
         {
             _banco = banco;
         }
-        public Perguntas Atualizar(int id, Perguntas pesquisa)
+        public Perguntas Atualizar(Perguntas pergunta)
         {
-            if (id == pesquisa.Id)
+            var idPesquisa = _banco.Pesquisa.AsNoTracking().FirstOrDefault(a => a.Id == pergunta.Id);
+            if (idPesquisa != null && idPesquisa.Id == pergunta.Id)
             {
-                _banco.Update(pesquisa);
+                _banco.Pesquisa.Update(pergunta);
             }
             _banco.SaveChanges();
-            return pesquisa;
+            return pergunta;
         }
 
-        public List<Perguntas> BuscarPesquisas()
+        public Perguntas Buscar(int id)
         {
-            var listaPesquisas = _banco.Pesquisa;
-            return listaPesquisas.ToList();
+            var perguntaEspecifica = _banco.Pesquisa.AsNoTracking().FirstOrDefault(a => a.Id == id);
+            return perguntaEspecifica;
         }
 
-        public Perguntas Cadastrar(Perguntas pesquisa)
+        public List<Perguntas> BuscarTodasPerguntas()
         {
-            if(pesquisa != null)
+            var listaPerguntas = _banco.Pesquisa;
+            return listaPerguntas.ToList();
+        }
+
+        public Perguntas Cadastrar(Perguntas pergunta)
+        {
+            if (pergunta != null)
             {
-                _banco.Add(pesquisa);
+                _banco.Add(pergunta);
                 _banco.SaveChanges();
             }
-            return pesquisa;
+            return pergunta;
 
         }
 
         public void Excluir(int id)
         {
             var idPesquisa = _banco.Pesquisa.Find(id);
-            if(idPesquisa != null)
+            if (idPesquisa != null)
+            {
                 _banco.Pesquisa.Remove(idPesquisa);
                 _banco.SaveChanges();
             }
         }
     }
+}

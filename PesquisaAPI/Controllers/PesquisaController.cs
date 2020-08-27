@@ -20,23 +20,32 @@ namespace PesquisaAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Cadastrar([FromBody] Perguntas pesquisa)
+        public ActionResult Cadastrar([FromBody] Perguntas pergunta)
         {
-            if (pesquisa == null) return BadRequest();
-            return Ok(_pesquisaRepository.Cadastrar(pesquisa));
+            if (pergunta == null) return BadRequest();
+            return Ok(_pesquisaRepository.Cadastrar(pergunta));
         }
         [HttpGet]
-        public ActionResult BuscarPesquisas()
+        public ActionResult BuscarTodasPerguntas()
         {
-            return Ok(_pesquisaRepository.BuscarPesquisas());
+            return Ok(_pesquisaRepository.BuscarTodasPerguntas());
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        public ActionResult BuscarPergunta(int id)
+        {
+            return Ok(_pesquisaRepository.Buscar(id));
         }
 
         [HttpPut]
         [Route("{id}")]
-        public ActionResult Atualizar(int id,[FromBody] Perguntas pesquisa)
+        public ActionResult Atualizar(int id,[FromBody] Perguntas pergunta)
         {
-            if (pesquisa == null) return BadRequest();
-            return Ok(_pesquisaRepository.Atualizar(id, pesquisa));
+            if (pergunta == null) return BadRequest();
+
+            pergunta.Id = id;
+            return Ok(_pesquisaRepository.Atualizar(pergunta));
         }
 
         [HttpDelete]
