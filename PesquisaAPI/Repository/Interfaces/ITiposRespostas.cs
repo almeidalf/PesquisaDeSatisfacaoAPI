@@ -1,17 +1,17 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿
 using PesquisaAPI.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Net;
+
 
 namespace PesquisaAPI.Repository.Interfaces
 {
     public interface ITiposRespostas
     {
-        Task<HttpResponse> Cadastrar(Respostas resposta);
-        Task<HttpResponse> Atualizar(int id, Respostas resposta);
-        List<Respostas> BuscarTodos();
+        HttpStatusCode Cadastrar(Respostas tipoResposta);
+        HttpStatusCode Atualizar(Respostas tipoResposta);
+        Respostas TipoRespostaEspecifica(int id);
+        List<Respostas> BuscarTodosTiposDeRespostas();
         void Excluir(int id);
 
     }

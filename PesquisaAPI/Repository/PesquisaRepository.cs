@@ -21,7 +21,7 @@ namespace PesquisaAPI.Repository
         public Perguntas Atualizar(Perguntas pergunta)
         {
             var idPesquisa = _banco.Pesquisa.AsNoTracking().FirstOrDefault(a => a.Id == pergunta.Id);
-            if (idPesquisa != null && idPesquisa.Id == pergunta.Id)
+            if (idPesquisa != null)
             {
                 _banco.Pesquisa.Update(pergunta);
             }
@@ -32,7 +32,14 @@ namespace PesquisaAPI.Repository
         public Perguntas Buscar(int id)
         {
             var perguntaEspecifica = _banco.Pesquisa.AsNoTracking().FirstOrDefault(a => a.Id == id);
-            return perguntaEspecifica;
+            if (perguntaEspecifica != null)
+            {
+                return perguntaEspecifica;
+            }
+            else
+            {
+                return new Perguntas();
+            }
         }
 
         public List<Perguntas> BuscarTodasPerguntas()
@@ -43,11 +50,8 @@ namespace PesquisaAPI.Repository
 
         public Perguntas Cadastrar(Perguntas pergunta)
         {
-            if (pergunta != null)
-            {
-                _banco.Add(pergunta);
-                _banco.SaveChanges();
-            }
+            _banco.Add(pergunta);
+            _banco.SaveChanges();
             return pergunta;
 
         }

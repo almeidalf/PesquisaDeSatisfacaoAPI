@@ -29,6 +29,7 @@ namespace PesquisaAPI
             });
             services.AddScoped<IPesquisa, PesquisaRepository>();
             services.AddScoped<IRespostas, RespostasRepository>();
+            services.AddScoped<ITiposRespostas, TiposRespostasRepository>();
             services.AddControllers().AddNewtonsoftJson();
             services.AddMvc(setupAction => {
                 setupAction.EnableEndpointRouting = false;

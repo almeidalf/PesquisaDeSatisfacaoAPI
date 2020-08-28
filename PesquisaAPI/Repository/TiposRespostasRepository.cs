@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.EntityFrameworkCore;
 using PesquisaAPI.DB;
 using PesquisaAPI.Models;
 using PesquisaAPI.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Net;
 
 namespace PesquisaAPI.Repository
 {
@@ -16,25 +16,62 @@ namespace PesquisaAPI.Repository
         {
             _banco = banco;
         }
-        public Task<HttpResponse> Atualizar(int id, Respostas resposta)
+        public HttpStatusCode Atualizar(Respostas tipoResposta)
         {
-            _banco.Respostas.Update(resposta);
-            return null;
+            var idTipoResposta = _banco.Respostas.AsNoTracking().FirstOrDefault(a => a.Id == tipoResposta.Id);
+            if (idTipoResposta != null)
+            {
+                _banco.Respostas.Update(tipoResposta);
+                _banco.SaveChanges();
+                return HttpStatusCode.OK;
+            }
+            else
+            {
+                return HttpStatusCode.NotFound;
+            }
         }
 
-        public List<Respostas> BuscarTodos()
+        public List<Respostas> BuscarTodosTiposDeRespostas()
         {
-            throw new NotImplementedException();
+            var todosTiposRespostas = _banco.Respostas;
+            if (todosTiposRespostas != null)
+            {
+                return todosTiposRespostas.ToList();
+            }
+            else
+            {
+                return new List<Respostas>();
+            }
         }
 
-        public Task<HttpResponse> Cadastrar(Respostas resposta)
+        public HttpStatusCode Cadastrar(Respostas tipoResposta)
         {
-            throw new NotImplementedException();
+            _banco.Add(tipoResposta);
+            _banco.SaveChanges();
+            return HttpStatusCode.OK;
         }
 
         public void Excluir(int id)
         {
-            throw new NotImplementedException();
+            var idTipoResposta = _banco.Respostas.AsNoTracking().FirstOrDefault(a => a.Id == id);
+            if (idTipoResposta != null)
+            {
+                _banco.Respostas.Remove(idTipoResposta);
+                _banco.SaveChanges();
+            }
+        }
+
+        public Respostas TipoRespostaEspecifica(int id)
+        {
+            var existeTipoResposta = _banco.Respostas.AsNoTracking().FirstOrDefault(a => a.Id == id);
+            if(existeTipoResposta != null)
+            {
+                return existeTipoResposta;
+            }
+            else
+            {
+                return new Respostas();
+            }
         }
     }
 }

@@ -35,12 +35,20 @@ namespace PesquisaAPI.Controllers
         [Route("{id}")]
         public ActionResult BuscarPergunta(int id)
         {
-            return Ok(_pesquisaRepository.Buscar(id));
+            var retorno = _pesquisaRepository.Buscar(id);
+            if (retorno.Id != 0)
+            {
+                return Ok(retorno);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         [HttpPut]
         [Route("{id}")]
-        public ActionResult Atualizar(int id,[FromBody] Perguntas pergunta)
+        public ActionResult Atualizar(int id, [FromBody] Perguntas pergunta)
         {
             if (pergunta == null) return BadRequest();
 
